@@ -1,0 +1,17 @@
+
+@import "./_partials/flexbox";
+@import "./_partials/common";
+
+html, body, * {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    @include box-sizing(border-box);
+
+    font-family: HelveticaNeue, Helvetica, "Noto Sans Japanese", "Hiragino Kaku Gothic ProN", meiryo, 'ms pgothic', Arial, sans-serif;
+    color: #333;
+}
+
+@import "./_pages/top";
+
