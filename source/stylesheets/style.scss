@@ -13,5 +13,13 @@ html, body, * {
     color: #333;
 }
 
+footer {
+    width: 600px;
+    padding: 30px 0px;
+
+    margin-left: auto;
+    margin-right: auto;
+}
+
 @import "./_pages/top";
 

@@ -1,37 +1,63 @@
-var gulp = require("gulp");
-var babel = require("gulp-babel");
-var sass = require("gulp-sass");
+const gulp = require("gulp");
+const $ = require("gulp-load-plugins")();
+const path = require("path");
 
-const sources = {
-    javascript: "./source/javascripts/*.js",
-    sass: [
-        "./source/sass/*.scss",
-        "./source/sass/*/*.scss"
-    ],
-};
+gulp.task("webpack", function() {
+    const source = "./source/javascripts/main.js";
+    const config = {
+        watch: true,
+        entry: source,
+        output: {
+            filename: "[name].js"
+        },
+        module: {
+            loaders : [
+                { test: /\.(glsl|frag|vert)$/, loader: "raw", exclude: /node_modules/ },
+                { 
+                    test: /\.(glsl|frag|vert)$/, 
+                    loader: "glslify", 
+                    exclude: /node_modules/
+                },
+                {
+                    test: /\.js$/,
+                    exclude: /node_modules/,
+                    loader: "babel",
+                    query: {
+                        presets: ["es2015"],
+                        compact: false
+                    }
+                },
+                { test:"/\.json$/", loader: "json" }
+            ]
+        },
+        resolve : {
+            root : [path.join(__dirname, "bower_components")],
+            extensions : ["", ".js"],
 
-gulp.task("babel", function() {
-    gulp.src(sources.javascript)
-        .pipe(babel({
-            presets: ["es2015"]
-        }))
-        .pipe(gulp.dest("./static/javascripts"));
+            alias : {
+                threejs : "threejs/build/three.min.js",
+                "dat-gui" : "dat-gui/build/dat.gui.min.js"
+            }
+        },
+        plugins : []
+    };
+
+    return gulp.src(source)
+        .pipe($.plumber())
+        .pipe($.webpack(config))
+        .pipe(gulp.dest("static/javascripts"));
 });
 
-gulp.task("babel-watch", function() {
-    gulp.watch(sources.javascript, ["babel"]);
+gulp.task("watch", function() {
+    gulp.watch(["./source/stylesheets/*.scss", "./source/stylesheets/*/*.scss"], ["sass"]);
 });
 
-gulp.task("sass", function(){
-  gulp.src(sources.sass)
-    .pipe(sass({ outputStyle: "expanded" }))
-    .pipe(gulp.dest("./static/stylesheets"));
+gulp.task("sass", function() {
+    gulp.src("./source/stylesheets/*.scss")
+        .pipe($.plumber())
+        .pipe($.sass())
+        .pipe(gulp.dest("./static/stylesheets"));
 });
 
-gulp.task("sass-watch", ["sass"], function() {
-    gulp.watch(sources.sass, ["sass"]);
-});
-
-gulp.task("watch", ["babel-watch", "sass-watch"]);
-gulp.task("default", ["babel", "sass", "watch"]);
+gulp.task("default", ["webpack", "watch"]);
 

@@ -1,0 +1,57 @@
+
+#background {
+    position: absolute;
+}
+
+.container {
+
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 60px;
+
+    .logo {
+        margin-top: 100px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 100px;
+
+        width: 240px;
+
+        .logo-inner {
+            text-align: left;
+
+            h1 {
+                font-size: 80px;
+                letter-spacing: 2px;
+                display: block;
+            }
+        }
+    }
+
+    .description {
+        p {
+            padding: 20px 10px;
+            font-size: 20px;
+        }
+    }
+
+    .member {
+        ul {
+            list-style: none;
+            li {
+                display: inline-block;
+                padding: 4px 10px;
+
+                a {
+                    text-decoration: none;
+
+                    &:hover {
+                    }
+                }
+            }
+        }
+    }
+
+}
+

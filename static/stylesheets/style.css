@@ -7,5 +7,41 @@ html, body, * {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   font-family: HelveticaNeue, Helvetica, "Noto Sans Japanese", "Hiragino Kaku Gothic ProN", meiryo, 'ms pgothic', Arial, sans-serif;
-  color: #333;
-}
+  color: #333; }
+
+footer {
+  width: 600px;
+  padding: 30px 0px;
+  margin-left: auto;
+  margin-right: auto; }
+
+#background {
+  position: absolute; }
+
+.container {
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 60px; }
+  .container .logo {
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 100px;
+    width: 240px; }
+    .container .logo .logo-inner {
+      text-align: left; }
+      .container .logo .logo-inner h1 {
+        font-size: 80px;
+        letter-spacing: 2px;
+        display: block; }
+  .container .description p {
+    padding: 20px 10px;
+    font-size: 20px; }
+  .container .member ul {
+    list-style: none; }
+    .container .member ul li {
+      display: inline-block;
+      padding: 4px 10px; }
+      .container .member ul li a {
+        text-decoration: none; }
