@@ -14,9 +14,29 @@
 </head>
 <body>
 
-	<main>
-        <h1>IndieVisualLab</h1>
+    <canvas id="background"></canvas>
+	<main id="main" class="container">
+        <div class="logo">
+            <div class="logo-inner">
+                <h1>Indie</h1>
+                <h1>Visual</h1>
+                <h1>Lab</h1>
+            </div>
+        </div>
+        <div class="description">
+            <p>IndieVisualLabは<a href="https://techbookfest.org/event/tbf03" target="_blank">技術書典</a>に向けて、主にグラフィクスプログラミングを取り扱った技術同人誌を執筆中の同人サークルです</p>
+        </div>
+        <div class="member">
+            <h2>メンバー</h2>
+            <ul>
+                <li v-for="member in members">
+                    <a v-text="member.name" v-bind:href="member.github"></a>
+                </li>
+            </ul>
+        </div>
     </main>
+    <script src="http://IndieVisualLab.github.io/javascripts/lib/three.min.js"></script>
+    <script src="http://IndieVisualLab.github.io/javascripts/main.js"></script>
 
         <footer>
             <div class="copyright">
