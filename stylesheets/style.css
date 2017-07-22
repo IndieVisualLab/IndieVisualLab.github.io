@@ -6,20 +6,15 @@ html, body, * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  font-family: HelveticaNeue, Helvetica, "Noto Sans Japanese", "Hiragino Kaku Gothic ProN", meiryo, 'ms pgothic', Arial, sans-serif;
+  font-family: HelveticaNeue, Helvetica, "Hiragino Kaku Gothic ProN", meiryo, 'ms pgothic', Arial, sans-serif;
   color: #333; }
-
-footer {
-  width: 600px;
-  padding: 30px 0px;
-  margin-left: auto;
-  margin-right: auto; }
 
 #background {
   position: absolute; }
 
 .container {
   width: 600px;
+  color: #333;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 60px; }
@@ -28,20 +23,63 @@ footer {
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 100px;
-    width: 240px; }
+    width: 300px; }
     .container .logo .logo-inner {
       text-align: left; }
       .container .logo .logo-inner h1 {
-        font-size: 80px;
+        font-size: 100px;
+        font-weight: bold;
         letter-spacing: 2px;
         display: block; }
   .container .description p {
     padding: 20px 10px;
+    font-size: 15px;
+    color: #555; }
+  .container .description a {
+    text-decoration: none;
+    margin: 2px 4px;
+    border-bottom: 1px solid #ccc; }
+    .container .description a:hover {
+      border: none; }
+  .container .member h2 {
     font-size: 20px; }
   .container .member ul {
     list-style: none; }
     .container .member ul li {
       display: inline-block;
-      padding: 4px 10px; }
+      padding: 4px 8px; }
       .container .member ul li a {
-        text-decoration: none; }
+        color: #555;
+        display: inline-block;
+        padding: 2px 6px;
+        text-decoration: none;
+        border-radius: 1px; }
+        .container .member ul li a:hover {
+          color: white;
+          background-image: linear-gradient(120deg, #a6c0fe 0%, #f68084 100%); }
+
+footer {
+  width: 600px;
+  padding: 30px 0px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 12px;
+  color: #777; }
+
+@media screen and (max-width: 640px) {
+  .container {
+    width: 300px;
+    color: #333; }
+    .container .logo {
+      margin-top: 100px;
+      margin-bottom: 60px;
+      width: 230px; }
+      .container .logo .logo-inner {
+        text-align: left; }
+        .container .logo .logo-inner h1 {
+          font-size: 70px;
+          font-weight: bold;
+          letter-spacing: 2px;
+          display: block; }
+  footer {
+    width: 300px; } }
