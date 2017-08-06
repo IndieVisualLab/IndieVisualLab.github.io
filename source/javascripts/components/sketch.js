@@ -4,10 +4,6 @@ import "../lib/threejs/shaders/CopyShader";
 import "../lib/threejs/postprocessing/RenderPass";
 import "../lib/threejs/postprocessing/ShaderPass";
 import "../lib/threejs/postprocessing/MaskPass";
-import "../lib/threejs/postprocessing/SMAAPass";
-import "../lib/threejs/shaders/SMAAShader";
-import "../lib/threejs/postprocessing/FilmPass";
-import "../lib/threejs/shaders/FilmShader";
 import "../lib/threejs/controls/TrackballControls";
 
 import CompositePass from "./composite";
