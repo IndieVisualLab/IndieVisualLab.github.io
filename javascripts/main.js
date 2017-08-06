@@ -2480,8 +2480,6 @@
 	            var width = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 10;
 	            var height = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
 
-	            console.log(texture);
-
 	            var plane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), new THREE.MeshBasicMaterial({
 	                map: texture,
 	                side: THREE.DoubleSide
@@ -3651,7 +3649,6 @@
 	                vertexShader: __webpack_require__(11),
 	                fragmentShader: __webpack_require__(13)
 	            });
-	            console.log(this.throughMaterial);
 
 	            this.blurMaterial = new THREE.ShaderMaterial({
 	                uniforms: {
