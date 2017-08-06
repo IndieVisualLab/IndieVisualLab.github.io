@@ -85,8 +85,6 @@ export default class Sketch extends THREE.EventDispatcher {
     }
 
     debugTexture(texture, width = 10, height = 10) {
-        console.log(texture);
-
         let plane = new THREE.Mesh(
             new THREE.PlaneGeometry(1, 1, 1, 1),
             new THREE.MeshBasicMaterial({

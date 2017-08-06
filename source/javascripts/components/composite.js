@@ -75,7 +75,6 @@ export default class CompositePass extends THREE.ShaderPass {
             vertexShader: require("../../shaders/posteffects/kernel.vert"),
             fragmentShader: require("../../shaders/posteffects/through.frag")
         });
-        console.log(this.throughMaterial);
 
         this.blurMaterial = new THREE.ShaderMaterial({
             uniforms: {
@@ -85,7 +84,6 @@ export default class CompositePass extends THREE.ShaderPass {
             vertexShader: require("../../shaders/posteffects/kernel.vert"),
             fragmentShader: require("../../shaders/posteffects/blur.frag")
         });
-
     }
 
 	setSize(width, height) {
