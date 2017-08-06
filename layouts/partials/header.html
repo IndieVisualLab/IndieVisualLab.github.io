@@ -2,7 +2,7 @@
 <html lang="{{ .Site.LanguageCode | default "en-us" }}">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>{{ .Title }}</title>
 	{{ with .Site.Params.description }}<meta name="description" content="{{ . }}">{{ end }}
@@ -11,5 +11,9 @@
 	<link rel="stylesheet" href="{{ .Site.BaseURL }}stylesheets/style.css">
 	{{ if .RSSLink -}}<link href="{{ .RSSLink }}" rel="feed" type="application/rss+xml" title="{{ .Site.Title }}">{{- end }}
 	{{ .Hugo.Generator }}
+
+    <meta property="og:title" content="IndieVisualLab" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name"  content="IndieVisualLab" />
 </head>
 <body>

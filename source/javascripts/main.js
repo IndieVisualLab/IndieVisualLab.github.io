@@ -1,6 +1,7 @@
 
 import Vue from "./lib/vue.min";
 import Member from "./components/member";
+import Sketch from "./components/sketch";
 
 class App {
 
@@ -12,7 +13,6 @@ class App {
                 members: []
             },
             mounted: function() {
-                console.log("mounted");
                 self.request("/json/members.json").then((data) => {
                     this.members = data.map((d) => {
                         return new Member(d);
@@ -21,6 +21,8 @@ class App {
             }
         });
 
+        const canvas = document.getElementById("background");
+        new Sketch(canvas);
     }
 
     request(path) {
@@ -38,7 +40,6 @@ class App {
                 }
             };
             xhr.send();
-
         });
 
     }
@@ -46,5 +47,3 @@ class App {
 }
 
 new App();
-
-
