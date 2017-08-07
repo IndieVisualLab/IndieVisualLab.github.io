@@ -1,42 +1,51 @@
 [
     {
         "name": "a3geek",
-        "github": "a3geek"
+        "github": "a3geek",
+        "twitter": "a3geek"
     },
     {
         "name": "fuqunaga",
-        "github": "fuqunaga"
+        "github": "fuqunaga",
+        "twitter": "fuqunaga"
     },
     {
         "name": "hiroakioishi",
-        "github": "hiroakioishi"
+        "github": "hiroakioishi",
+        "twitter": "_irishoak",
+        "personal": "irishoak.tumblr.com"
     },
     {
         "name": "kaiware007",
-        "github": "kaiware007"
+        "github": "kaiware007",
+        "twitter": "kaiware007"
     },
     {
         "name": "kodai100",
-        "github": "kodai100"
-    },
-    {
-        "name": "komietty",
-        "github": "komietty"
+        "github": "kodai100",
+        "twitter": "m1ke_wazowsk1",
+        "personal" : "creativeuniverse.tokyo/portfolio/"
     },
     {
         "name": "mattatz",
-        "github": "mattatz"
+        "github": "mattatz",
+        "twitter": "mattatz",
+        "personal": "mattatz.org"
     },
     {
         "name": "sakope",
         "github": "sakope"
     },
     {
-        "name": "sugi-cc",
-        "github": "sugi-cc"
+        "name": "sugi-cho",
+        "github": "sugi-cho",
+        "twitter": "sugi_cho",
+        "personal": "sugi.cc"
     },
     {
         "name": "XJINE",
-        "github": "XJINE"
+        "github": "XJINE",
+        "twitter": "XJINE",
+        "personal": "neareal.com"
     }
 ]
