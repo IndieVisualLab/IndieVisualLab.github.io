@@ -55,31 +55,43 @@ html, body, * {
         font-weight: bold;
         letter-spacing: 2px;
         display: block; }
-  .container .description p {
-    padding: 20px 10px;
-    font-size: 15px;
-    color: #ddd; }
-  .container .description a {
-    text-decoration: none;
-    margin: 2px 4px;
-    border-bottom: 1px solid #ccc; }
-    .container .description a:hover {
-      border: none; }
-  .container .member h2 {
-    font-size: 20px; }
-  .container .member ul {
-    list-style: none; }
-    .container .member ul li {
-      display: inline-block;
-      padding: 4px 8px; }
-      .container .member ul li a {
-        color: #ddd;
+  .container .description {
+    margin-bottom: 80px; }
+    .container .description p {
+      text-align: center;
+      line-height: 2.0em;
+      font-size: 18px;
+      color: #ddd; }
+    .container .description a {
+      text-decoration: none;
+      margin: 2px 4px;
+      border-bottom: 1px solid #ccc; }
+      .container .description a:hover {
+        border: none; }
+  .container .member {
+    margin-bottom: 60px; }
+    .container .member h2 {
+      text-align: center;
+      font-size: 36px;
+      margin-bottom: 40px; }
+    .container .member ul {
+      list-style: none;
+      margin: 0 auto;
+      text-align: center; }
+      .container .member ul li {
+        width: 160px;
         display: inline-block;
-        padding: 2px 6px;
-        text-decoration: none;
-        border-radius: 1px; }
-        .container .member ul li a:hover {
-          color: #aaa; }
+        padding: 12px 16px;
+        text-align: center; }
+        .container .member ul li span {
+          display: block;
+          font-size: 22px;
+          margin-bottom: 4px; }
+        .container .member ul li div i {
+          font-size: 20px;
+          color: #fff; }
+          .container .member ul li div i:hover {
+            color: #aaa; }
 
 footer {
   position: relative;
