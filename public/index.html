@@ -9,6 +9,7 @@
 	
     <link rel="icon" href="https://IndieVisualLab.github.io/favicon.ico">
 	<link rel="stylesheet" href="https://IndieVisualLab.github.io/stylesheets/style.css">
+	<link rel="stylesheet" href="https://IndieVisualLab.github.io/stylesheets/font-awesome.min.css">
 	<link href="https://IndieVisualLab.github.io/index.xml" rel="feed" type="application/rss+xml" title="IndieVisualLab">
 	<meta name="generator" content="Hugo 0.20.7" />
 
@@ -31,10 +32,15 @@
             <p>IndieVisualLabは<a href="https://techbookfest.org/event/tbf03" target="_blank">技術書典</a>に向けて、主にグラフィクスプログラミングを取り扱った技術同人誌を執筆中の同人サークルです</p>
         </div>
         <div class="member">
-            <h2>メンバー</h2>
+            <h2>Member</h2>
             <ul>
                 <li v-for="member in members">
-                    <a v-text="member.name" v-bind:href="member.github" target="_blank"></a>
+                    <span v-text="member.name"></span>
+                    <div>
+                        <a v-bind:href="member.github" target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a>
+                        <a v-if="member.twitter.length > 0" v-bind:href="member.twitter" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                        <a v-if="member.personal.length > 0" v-bind:href="member.personal" target="_blank"><i class="fa fa-user" aria-hidden="true"></i></a>
+                    </div>
                 </li>
             </ul>
         </div>
