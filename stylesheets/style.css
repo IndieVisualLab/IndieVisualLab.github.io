@@ -62,12 +62,24 @@ html, body, * {
       line-height: 2.0em;
       font-size: 18px;
       color: #ddd; }
-    .container .description a {
+    .container .description .header {
+      line-height: 1.5em; }
+    .container .description .note {
+      font-size: 14px;
+      line-height: 1.5em; }
+    .container .description img.cover {
+      width: 100%; }
+    .container .description a.preview {
+      margin: 10px 0px;
+      display: block; }
+    .container .description a.link {
       text-decoration: none;
       margin: 2px 4px;
       border-bottom: 1px solid #ccc; }
-      .container .description a:hover {
+      .container .description a.link:hover {
         border: none; }
+    .container .description .inner {
+      margin: 20px 0px; }
   .container .member {
     margin-bottom: 60px; }
     .container .member h2 {
