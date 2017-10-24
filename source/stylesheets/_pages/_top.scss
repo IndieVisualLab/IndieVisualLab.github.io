@@ -66,7 +66,25 @@
             color: #ddd;
         }
 
-        a {
+        .header {
+            line-height: 1.5em;
+        }
+
+        .note {
+            font-size: 14px;
+            line-height: 1.5em;
+        }
+
+        img.cover {
+            width: 100%;
+        }
+
+        a.preview {
+            margin: 10px 0px;
+            display: block;
+        }
+
+        a.link {
             text-decoration: none;
             margin: 2px 4px;
             border-bottom: 1px solid #ccc;
@@ -74,6 +92,10 @@
             &:hover {
                 border: none;
             }
+        }
+
+        .inner {
+            margin: 20px 0px;
         }
 
     }

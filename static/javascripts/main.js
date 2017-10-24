@@ -3632,9 +3632,9 @@
 	    }, {
 	        key: "setupBlur",
 	        value: function setupBlur(options) {
-	            this.blurDownSample = Math.max(1, options.downSample || 1);
+	            this.blurDownSample = Math.max(1, options.downSample || 2);
 	            this.blurAmount = options.blurAmount || 1;
-	            this.blurIterations = options.blurIterations || 4;
+	            this.blurIterations = options.blurIterations || 3;
 
 	            var pars = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat };
 	            var width = this.material.uniforms.resolution.x >> this.blurDownSample;
@@ -3668,6 +3668,7 @@
 
 	            var w = width >> this.blurDownSample;
 	            var h = height >> this.blurDownSample;
+
 	            this.renderTargetDownSample.setSize(w, h);
 	            this.renderTargetX.setSize(w, h);
 	            this.renderTargetY.setSize(w, h);
