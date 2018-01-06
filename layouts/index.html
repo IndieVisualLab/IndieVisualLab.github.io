@@ -1,40 +1,5 @@
 {{ partial "header.html" . }}
     <canvas id="background"></canvas>
-	<main id="main" class="container">
-        <div class="logo">
-            <div class="logo-inner">
-                <h1>Indie</h1>
-                <h1>Visual</h1>
-                <h1>Lab</h1>
-            </div>
-        </div>
-        <div class="description">
-            <p>Indie Visual LabはリアルタイムCGプログラミングについての技術資料を作成・公開したり、その技術に基づくコンテンツ開発を行っているサークルです。</p>
-            <div class="inner">
-                <p class="header">技術同人誌<a class="link" href="https://indievisuallab.stores.jp/items/59edf11ac8f22c0152002588" target="_blank">Unity Graphics Programming</a>販売中</p>
-                <a class="preview" href="https://indievisuallab.stores.jp/items/59edf11ac8f22c0152002588" target="_blank">
-                    <img class="cover" src="images/cover.png" alt="Unity Graphics Programming"></img>
-                </a>
-                <p class="note">Unityによるグラフィックスプログラミングテクニックについて解説した技術同人誌です。
-GPUを活用した表現を行うための基礎知識やその応用など、様々なトピックを取り上げています。</p>
-                <p class="note">※ 全章についてサンプルコード付属</p>
-            </div>
-            <p><a class="link" href="mailto:lab.indievisual@gmail.com">lab.indievisual@gmail.com</a></p>
-        </div>
-        <div class="member">
-            <h2>Member</h2>
-            <ul>
-                <li v-for="member in members">
-                    <span v-text="member.name"></span>
-                    <div>
-                        <a v-bind:href="member.github" target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a>
-                        <a v-if="member.twitter.length > 0" v-bind:href="member.twitter" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-                        <a v-if="member.personal.length > 0" v-bind:href="member.personal" target="_blank"><i class="fa fa-user" aria-hidden="true"></i></a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </main>
     <script src="{{ .Site.BaseURL }}javascripts/lib/three.min.js"></script>
     <script src="{{ .Site.BaseURL }}javascripts/main.js"></script>
 {{ template "_internal/google_analytics.html" . }}

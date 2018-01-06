@@ -7,6 +7,8 @@ class App {
 
     constructor() {
         const self = this;
+
+        /*
         const vue = new Vue({
             el: "#main",
             data: {
@@ -20,6 +22,7 @@ class App {
                 });
             }
         });
+        */
 
         const canvas = document.getElementById("background");
         new Sketch(canvas);

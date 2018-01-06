@@ -69,21 +69,22 @@
 	        _classCallCheck(this, App);
 
 	        var self = this;
-	        var vue = new _vue2.default({
+
+	        /*
+	        const vue = new Vue({
 	            el: "#main",
 	            data: {
 	                members: []
 	            },
-	            mounted: function mounted() {
-	                var _this = this;
-
-	                self.request("/json/members.json").then(function (data) {
-	                    _this.members = data.map(function (d) {
-	                        return new _member2.default(d);
+	            mounted: function() {
+	                self.request("/json/members.json").then((data) => {
+	                    this.members = data.map((d) => {
+	                        return new Member(d);
 	                    });
 	                });
 	            }
 	        });
+	        */
 
 	        var canvas = document.getElementById("background");
 	        new _sketch2.default(canvas);
@@ -2389,6 +2390,10 @@
 
 	var _particle2 = _interopRequireDefault(_particle);
 
+	var _human = __webpack_require__(22);
+
+	var _human2 = _interopRequireDefault(_human);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2415,17 +2420,20 @@
 	        });
 
 	        _this.setupScene();
-	        _this.setupComposer();
+	        _this.setupControls();
+	        _this.setupModel();
+	        // this.setupComposer();
 
 	        window.addEventListener("resize", function (e) {
 	            _this.resize();
 	        });
 
-	        window.addEventListener("mousemove", function (e) {
-	            var mx = e.clientX,
-	                my = e.clientY;
-	            _this.interact(mx, my);
+	        /*
+	        window.addEventListener("mousemove", (e) => {
+	            let mx = e.clientX, my = e.clientY;
+	            this.interact(mx, my);
 	        });
+	        */
 
 	        var loop = function loop(time) {
 	            _this.loop(time);
@@ -2445,7 +2453,7 @@
 	            var dir = vector.sub(this.camera.position).normalize();
 	            var distance = -this.camera.position.z / dir.z;
 	            var p = this.camera.position.clone().add(dir.multiplyScalar(distance));
-	            this.system.interact(p);
+	            // this.system.interact(p);
 	        }
 	    }, {
 	        key: "setupScene",
@@ -2470,11 +2478,30 @@
 	            this.scene.add(cube);
 	            */
 
-	            this.system = new _particle2.default(this.renderer);
+	            /*
+	            this.system = new ParticleSystem(this.renderer);
 	            this.scene.add(this.system);
 	            this.updaters.push(this.system);
+	            */
 
 	            // this.debugTexture(this.system.texturePosition);
+	            var gridHelper = new THREE.GridHelper(10, 10);
+	            this.scene.add(gridHelper);
+	        }
+	    }, {
+	        key: "setupControls",
+	        value: function setupControls() {
+	            var controls = new THREE.TrackballControls(this.camera, this.renderer.domElement);
+	            this.updaters.push(controls);
+	        }
+	    }, {
+	        key: "setupModel",
+	        value: function setupModel() {
+	            var human = new _human2.default(this.renderer, "../models/lowpoly/");
+	            this.scene.add(human);
+	            this.updaters.push(human);
+
+	            // this.debugTexture(human.texturePosition);
 	        }
 	    }, {
 	        key: "debugTexture",
@@ -2532,8 +2559,8 @@
 	    }, {
 	        key: "render",
 	        value: function render() {
-	            // this.renderer.render(this.scene, this.camera);
-	            this.composer.render();
+	            this.renderer.render(this.scene, this.camera);
+	            // this.composer.render();
 	        }
 	    }, {
 	        key: "resize",
@@ -2545,7 +2572,7 @@
 
 	            this.camera.aspect = w / h;
 	            this.camera.updateProjectionMatrix();
-	            this.composer.setSize(w, h);
+	            // this.composer.setSize(w, h);
 	        }
 	    }]);
 
@@ -4553,6 +4580,883 @@
 /***/ (function(module, exports) {
 
 	module.exports = "#define GLSLIFY 1\n//\n// Description : Array and textureless GLSL 2D/3D/4D simplex\n//               noise functions.\n//      Author : Ian McEwan, Ashima Arts.\n//  Maintainer : ijm\n//     Lastmod : 20110822 (ijm)\n//     License : Copyright (C) 2011 Ashima Arts. All rights reserved.\n//               Distributed under the MIT License. See LICENSE file.\n//               https://github.com/ashima/webgl-noise\n//\n\nvec3 mod289_1_0(vec3 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec4 mod289_1_0(vec4 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec4 permute_1_1(vec4 x) {\n     return mod289_1_0(((x*34.0)+1.0)*x);\n}\n\nvec4 taylorInvSqrt_1_2(vec4 r)\n{\n  return 1.79284291400159 - 0.85373472095314 * r;\n}\n\nfloat snoise_1_3(vec3 v)\n  {\n  const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;\n  const vec4  D_1_4 = vec4(0.0, 0.5, 1.0, 2.0);\n\n// First corner\n  vec3 i  = floor(v + dot(v, C.yyy) );\n  vec3 x0 =   v - i + dot(i, C.xxx) ;\n\n// Other corners\n  vec3 g_1_5 = step(x0.yzx, x0.xyz);\n  vec3 l = 1.0 - g_1_5;\n  vec3 i1 = min( g_1_5.xyz, l.zxy );\n  vec3 i2 = max( g_1_5.xyz, l.zxy );\n\n  //   x0 = x0 - 0.0 + 0.0 * C.xxx;\n  //   x1 = x0 - i1  + 1.0 * C.xxx;\n  //   x2 = x0 - i2  + 2.0 * C.xxx;\n  //   x3 = x0 - 1.0 + 3.0 * C.xxx;\n  vec3 x1 = x0 - i1 + C.xxx;\n  vec3 x2 = x0 - i2 + C.yyy; // 2.0*C.x = 1/3 = C.y\n  vec3 x3 = x0 - D_1_4.yyy;      // -1.0+3.0*C.x = -0.5 = -D.y\n\n// Permutations\n  i = mod289_1_0(i);\n  vec4 p = permute_1_1( permute_1_1( permute_1_1(\n             i.z + vec4(0.0, i1.z, i2.z, 1.0 ))\n           + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))\n           + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));\n\n// Gradients: 7x7 points over a square, mapped onto an octahedron.\n// The ring size 17*17 = 289 is close to a multiple of 49 (49*6 = 294)\n  float n_ = 0.142857142857; // 1.0/7.0\n  vec3  ns = n_ * D_1_4.wyz - D_1_4.xzx;\n\n  vec4 j = p - 49.0 * floor(p * ns.z * ns.z);  //  mod(p,7*7)\n\n  vec4 x_ = floor(j * ns.z);\n  vec4 y_ = floor(j - 7.0 * x_ );    // mod(j,N)\n\n  vec4 x = x_ *ns.x + ns.yyyy;\n  vec4 y = y_ *ns.x + ns.yyyy;\n  vec4 h = 1.0 - abs(x) - abs(y);\n\n  vec4 b0 = vec4( x.xy, y.xy );\n  vec4 b1 = vec4( x.zw, y.zw );\n\n  //vec4 s0 = vec4(lessThan(b0,0.0))*2.0 - 1.0;\n  //vec4 s1 = vec4(lessThan(b1,0.0))*2.0 - 1.0;\n  vec4 s0 = floor(b0)*2.0 + 1.0;\n  vec4 s1 = floor(b1)*2.0 + 1.0;\n  vec4 sh = -step(h, vec4(0.0));\n\n  vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;\n  vec4 a1_1_6 = b1.xzyw + s1.xzyw*sh.zzww ;\n\n  vec3 p0_1_7 = vec3(a0.xy,h.x);\n  vec3 p1 = vec3(a0.zw,h.y);\n  vec3 p2 = vec3(a1_1_6.xy,h.z);\n  vec3 p3 = vec3(a1_1_6.zw,h.w);\n\n//Normalise gradients\n  vec4 norm = taylorInvSqrt_1_2(vec4(dot(p0_1_7,p0_1_7), dot(p1,p1), dot(p2, p2), dot(p3,p3)));\n  p0_1_7 *= norm.x;\n  p1 *= norm.y;\n  p2 *= norm.z;\n  p3 *= norm.w;\n\n// Mix final noise value\n  vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);\n  m = m * m;\n  return 42.0 * dot( m*m, vec4( dot(p0_1_7,x0), dot(p1,x1),\n                                dot(p2,x2), dot(p3,x3) ) );\n  }\n\n\n\nhighp float random_2_8(vec2 co)\n{\n    highp float a = 12.9898;\n    highp float b = 78.233;\n    highp float c = 43758.5453;\n    highp float dt= dot(co.xy ,vec2(a,b));\n    highp float sn= mod(dt,3.14);\n    return fract(sin(sn) * c);\n}\n\n\n\nuniform int mode;\nuniform float dt, time, speed;\n\nuniform vec3 point;\nuniform float force;\n\nconst float seedScale = 100.0;\n\nvoid init() {\n    vec2 uv = gl_FragCoord.xy / resolution.xy;\n    float r = random_2_8(uv);\n    gl_FragColor = vec4(0.0, 0.0, 0.0, 0.8 + 0.1 * r);\n}\n\nvec3 snoiseVec3 (vec3 x){\n    float s = snoise_1_3(vec3(x));\n    float s1 = snoise_1_3(vec3(x.y - 19.1, x.z + 33.4, x.x + 47.2));\n    float s2 = snoise_1_3(vec3(x.z + 74.2, x.x - 124.5, x.y + 99.4));\n    vec3 c = vec3(s, s1, s2);\n    return c;\n}\n\nvec3 curlNoise(vec3 p) {\n    const float e = 0.0009765625;\n\n    vec3 dx = vec3(e, 0, 0);\n    vec3 dy = vec3(0, e, 0);\n    vec3 dz = vec3(0, 0, e);\n\n    vec3 p_x0 = snoiseVec3(p - dx);\n    vec3 p_x1 = snoiseVec3(p + dx);\n    vec3 p_y0 = snoiseVec3(p - dy);\n    vec3 p_y1 = snoiseVec3(p + dy);\n    vec3 p_z0 = snoiseVec3(p - dz);\n    vec3 p_z1 = snoiseVec3(p + dz);\n\n    float x = p_y1.z - p_y0.z - p_z1.y + p_z0.y;\n    float y = p_z1.x - p_z0.x - p_x1.z + p_x0.z;\n    float z = p_x1.y - p_x0.y - p_y1.x + p_y0.x;\n\n    const float divisor = 1.0 / (2.0 * e);\n    return normalize(vec3(x, y, z) * divisor);\n}\n\nvoid update() {\n    vec2 uv = gl_FragCoord.xy / resolution.xy;\n\n    vec4 pos = texture2D(texturePosition, uv);\n    if(pos.w < 0.0) {\n        init();\n    } else {\n        vec4 vel = texture2D(textureVelocity, uv);\n        vel.xyz *= vel.w;\n        vel.xyz += speed * dt * curlNoise(pos.xyz + vec3(0, time, 0));\n\n        vec3 dir = pos.xyz - point;\n        float l = length(dir);\n        vel.xyz += (1.0 - l) * normalize(dir) * force;\n\n        gl_FragColor = vel;\n    }\n}\n\nvoid main() {\n    if(mode == 0) {\n        init();\n    } else {\n        update();\n    }\n}\n"
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	__webpack_require__(23);
+
+	var _GPUComputationRenderer = __webpack_require__(16);
+
+	var _GPUComputationRenderer2 = _interopRequireDefault(_GPUComputationRenderer);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Human = function (_THREE$Mesh) {
+	    _inherits(Human, _THREE$Mesh);
+
+	    function Human(renderer, folder) {
+	        var instances = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 100;
+	        var sections = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 12;
+
+	        _classCallCheck(this, Human);
+
+	        var _this = _possibleConstructorReturn(this, (Human.__proto__ || Object.getPrototypeOf(Human)).call(this, new THREE.Geometry()));
+
+	        _this.setup(renderer, instances, sections);
+
+	        _this.boneMatrices = [new THREE.Matrix4(), new THREE.Matrix4(), new THREE.Matrix4(), new THREE.Matrix4()];
+
+	        var objLoader = new THREE.OBJLoader();
+	        objLoader.load(folder + "Human.obj", function (model) {
+	            var mesh = model.children[0];
+	            var bgeo = mesh.geometry;
+	            bgeo.computeBoundingBox();
+
+	            var box = bgeo.boundingBox;
+	            var cx = (box.max.x - box.min.x) * 0.5 + box.min.x;
+	            var cz = (box.max.z - box.min.z) * 0.5 + box.min.z;
+	            var height = box.max.y - box.min.y;
+	            var unit = height / (sections - 1);
+
+	            var igeo = new THREE.InstancedBufferGeometry();
+	            igeo.maxInstancedCount = instances;
+
+	            // buffer attributes
+	            igeo.addAttribute("position", bgeo.attributes.position.clone());
+	            igeo.addAttribute("normal", bgeo.attributes.normal.clone());
+	            igeo.addAttribute("uv", bgeo.attributes.uv.clone());
+
+	            var vertices = bgeo.attributes.position;
+	            var vertexCount = vertices.count;
+	            var vertexArray = vertices.array;
+
+	            var skinIndex = new THREE.BufferAttribute(new Float32Array(vertexCount * 3), 3, 1);
+	            var skinWeight = new THREE.BufferAttribute(new Float32Array(vertexCount * 3), 3, 1);
+	            for (var i = 0; i < vertexCount; i++) {
+	                var vid = i * 3;
+	                var vy = vertexArray[vid + 1] + box.min.y;
+	                var sid = sections - 1 - vy / unit;
+
+	                var id0 = Math.floor(sid);
+	                var id1 = Math.ceil(sid);
+	                // console.log(id0, id1);
+	                var w = sid - id0;
+
+	                skinIndex.setXYZ(i, id0, id1, 0);
+	                skinWeight.setXYZ(i, 1.0 - w, w, 0);
+	            }
+
+	            igeo.addAttribute("skinIndex", skinIndex);
+	            igeo.addAttribute("skinWeight", skinWeight);
+
+	            // instanced buffer attributes
+
+	            // for sampling
+	            var uv2 = new THREE.InstancedBufferAttribute(new Float32Array(instances * 2), 2, 1);
+	            var invCount = 1.0 / instances;
+	            var uvOffset = 0.5 * invCount;
+	            for (var _i = 0, n = uv2.count; _i < n; _i++) {
+	                uv2.setXY(_i, 0, _i * invCount);
+	            }
+
+	            igeo.addAttribute("uv2", uv2);
+
+	            _this.geometry = igeo;
+	            _this.material = new THREE.RawShaderMaterial({
+	                vertexShader: __webpack_require__(24),
+	                fragmentShader: __webpack_require__(25),
+	                uniforms: {
+	                    bindMatrix: { type: "m4", value: new THREE.Matrix4() },
+	                    bindMatrixInverse: { type: "m4", value: new THREE.Matrix4() },
+	                    boneMatrices: { type: "m4f", value: _this.boneMatrices },
+	                    texturePosition: { type: "t", value: null },
+	                    textureRotation: { type: "r", value: null },
+	                    sections: { type: "v2", value: new THREE.Vector2(sections, 1.0 / sections) }
+	                },
+	                // side: THREE.DoubleSide
+	                defines: {
+	                    MAX_BONES: sections
+	                }
+	            });
+	        });
+
+	        _this.frustumCulled = false;
+	        return _this;
+	    }
+
+	    _createClass(Human, [{
+	        key: "setup",
+	        value: function setup(renderer, count, sections, options) {
+
+	            options = options || {};
+
+	            // setup vel
+	            this.gpuComputeVel = new _GPUComputationRenderer2.default(1, count, renderer);
+	            var vel = this.gpuComputeVel.createTexture();
+	            var velocity = options.velocity || __webpack_require__(28);
+	            this.velVar = this.gpuComputeVel.addVariable("textureVelocity", velocity, vel, options);
+	            this.gpuComputeVel.setVariableDependencies(this.velVar, [this.velVar]);
+	            this.gpuComputeVel.init();
+
+	            // setup pos, rot
+	            this.gpuCompute = new _GPUComputationRenderer2.default(sections, count, renderer);
+
+	            var pos = this.gpuCompute.createTexture();
+	            var rot = this.gpuCompute.createTexture();
+
+	            var position = options.position || __webpack_require__(26);
+	            var rotation = options.position || __webpack_require__(27);
+
+	            this.posVar = this.gpuCompute.addVariable("texturePosition", position, rot, options);
+	            this.rotVar = this.gpuCompute.addVariable("textureRotation", rotation, pos, options);
+
+	            this.gpuCompute.setVariableDependencies(this.posVar, [this.posVar, this.rotVar]);
+	            this.gpuCompute.setVariableDependencies(this.rotVar, [this.posVar, this.rotVar]);
+	            this.gpuCompute.init();
+
+	            this.gpuComputeUniforms = {};
+
+	            this.addUniform(this.gpuComputeUniforms, [this.posVar, this.rotVar, this.velVar], "mode", { type: "i", value: 0 });
+	            this.addUniform(this.gpuComputeUniforms, [this.posVar, this.rotVar, this.velVar], "dt", { type: "f", value: 0.0 });
+	            this.addUniform(this.gpuComputeUniforms, [this.posVar, this.rotVar, this.velVar], "time", { type: "f", value: 0.0 });
+	            this.addUniform(this.gpuComputeUniforms, [this.posVar], "speed", { type: "f", value: 0.5 });
+	            this.addUniform(this.gpuComputeUniforms, [this.posVar, this.rotVar], "sections", { type: "v2", value: new THREE.Vector2(sections, 1.0 / sections) });
+	            this.addUniform(this.gpuComputeUniforms, [this.posVar, this.rotVar], "textureVelocity", { type: "t", value: null });
+	            this.addUniform(this.gpuComputeUniforms, [this.velVar], "strength", { type: "f", value: 1.5 });
+	            this.update(0, 0, 0);
+	            this.gpuComputeUniforms.mode.value = 1;
+	        }
+	    }, {
+	        key: "addUniform",
+	        value: function addUniform(uniforms, variables, key, uniform) {
+	            variables.forEach(function (variable) {
+	                variable.material.uniforms[key] = uniform;
+	            });
+	            uniforms[key] = uniform;
+	            return uniform;
+	        }
+	    }, {
+	        key: "update",
+	        value: function update(dt, time, frames) {
+	            if (!this.material.uniforms) return;
+
+	            this.gpuComputeUniforms.dt.value = dt;
+	            this.gpuComputeUniforms.time.value = time;
+
+	            this.gpuComputeVel.compute();
+
+	            this.gpuComputeUniforms.textureVelocity.value = this.textureVelocity;
+	            this.gpuCompute.compute();
+
+	            this.material.uniforms.bindMatrix.value = this.matrixWorld;
+	            this.material.uniforms.bindMatrixInverse.value.getInverse(this.matrixWorld);
+
+	            var r = 0.25;
+	            var s = (Math.sin(time) + 1.0) * 0.5 - 0.5;
+	            this.boneMatrices[2].makeRotationY(s * Math.PI);
+	            this.boneMatrices[2].setPosition(new THREE.Vector3(Math.sin(time) * r, 0, Math.cos(time) * r));
+
+	            this.material.uniforms.texturePosition.value = this.texturePosition;
+	            this.material.uniforms.textureRotation.value = this.textureRotation;
+	        }
+	    }, {
+	        key: "texturePosition",
+	        get: function get() {
+	            return this.gpuCompute.getCurrentRenderTarget(this.posVar).texture;
+	        }
+	    }, {
+	        key: "textureRotation",
+	        get: function get() {
+	            return this.gpuCompute.getCurrentRenderTarget(this.rotVar).texture;
+	        }
+	    }, {
+	        key: "textureVelocity",
+	        get: function get() {
+	            return this.gpuCompute.getCurrentRenderTarget(this.velVar).texture;
+	        }
+	    }]);
+
+	    return Human;
+	}(THREE.Mesh);
+
+	exports.default = Human;
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports) {
+
+	'use strict';
+
+	/**
+	 * @author mrdoob / http://mrdoob.com/
+	 */
+
+	THREE.OBJLoader = function () {
+
+		// o object_name | g group_name
+		var object_pattern = /^[og]\s*(.+)?/;
+		// mtllib file_reference
+		var material_library_pattern = /^mtllib /;
+		// usemtl material_name
+		var material_use_pattern = /^usemtl /;
+
+		function ParserState() {
+
+			var state = {
+				objects: [],
+				object: {},
+
+				vertices: [],
+				normals: [],
+				colors: [],
+				uvs: [],
+
+				materialLibraries: [],
+
+				startObject: function startObject(name, fromDeclaration) {
+
+					// If the current object (initial from reset) is not from a g/o declaration in the parsed
+					// file. We need to use it for the first parsed g/o to keep things in sync.
+					if (this.object && this.object.fromDeclaration === false) {
+
+						this.object.name = name;
+						this.object.fromDeclaration = fromDeclaration !== false;
+						return;
+					}
+
+					var previousMaterial = this.object && typeof this.object.currentMaterial === 'function' ? this.object.currentMaterial() : undefined;
+
+					if (this.object && typeof this.object._finalize === 'function') {
+
+						this.object._finalize(true);
+					}
+
+					this.object = {
+						name: name || '',
+						fromDeclaration: fromDeclaration !== false,
+
+						geometry: {
+							vertices: [],
+							normals: [],
+							colors: [],
+							uvs: []
+						},
+						materials: [],
+						smooth: true,
+
+						startMaterial: function startMaterial(name, libraries) {
+
+							var previous = this._finalize(false);
+
+							// New usemtl declaration overwrites an inherited material, except if faces were declared
+							// after the material, then it must be preserved for proper MultiMaterial continuation.
+							if (previous && (previous.inherited || previous.groupCount <= 0)) {
+
+								this.materials.splice(previous.index, 1);
+							}
+
+							var material = {
+								index: this.materials.length,
+								name: name || '',
+								mtllib: Array.isArray(libraries) && libraries.length > 0 ? libraries[libraries.length - 1] : '',
+								smooth: previous !== undefined ? previous.smooth : this.smooth,
+								groupStart: previous !== undefined ? previous.groupEnd : 0,
+								groupEnd: -1,
+								groupCount: -1,
+								inherited: false,
+
+								clone: function clone(index) {
+
+									var cloned = {
+										index: typeof index === 'number' ? index : this.index,
+										name: this.name,
+										mtllib: this.mtllib,
+										smooth: this.smooth,
+										groupStart: 0,
+										groupEnd: -1,
+										groupCount: -1,
+										inherited: false
+									};
+									cloned.clone = this.clone.bind(cloned);
+									return cloned;
+								}
+							};
+
+							this.materials.push(material);
+
+							return material;
+						},
+
+						currentMaterial: function currentMaterial() {
+
+							if (this.materials.length > 0) {
+
+								return this.materials[this.materials.length - 1];
+							}
+
+							return undefined;
+						},
+
+						_finalize: function _finalize(end) {
+
+							var lastMultiMaterial = this.currentMaterial();
+							if (lastMultiMaterial && lastMultiMaterial.groupEnd === -1) {
+
+								lastMultiMaterial.groupEnd = this.geometry.vertices.length / 3;
+								lastMultiMaterial.groupCount = lastMultiMaterial.groupEnd - lastMultiMaterial.groupStart;
+								lastMultiMaterial.inherited = false;
+							}
+
+							// Ignore objects tail materials if no face declarations followed them before a new o/g started.
+							if (end && this.materials.length > 1) {
+
+								for (var mi = this.materials.length - 1; mi >= 0; mi--) {
+
+									if (this.materials[mi].groupCount <= 0) {
+
+										this.materials.splice(mi, 1);
+									}
+								}
+							}
+
+							// Guarantee at least one empty material, this makes the creation later more straight forward.
+							if (end && this.materials.length === 0) {
+
+								this.materials.push({
+									name: '',
+									smooth: this.smooth
+								});
+							}
+
+							return lastMultiMaterial;
+						}
+					};
+
+					// Inherit previous objects material.
+					// Spec tells us that a declared material must be set to all objects until a new material is declared.
+					// If a usemtl declaration is encountered while this new object is being parsed, it will
+					// overwrite the inherited material. Exception being that there was already face declarations
+					// to the inherited material, then it will be preserved for proper MultiMaterial continuation.
+
+					if (previousMaterial && previousMaterial.name && typeof previousMaterial.clone === 'function') {
+
+						var declared = previousMaterial.clone(0);
+						declared.inherited = true;
+						this.object.materials.push(declared);
+					}
+
+					this.objects.push(this.object);
+				},
+
+				finalize: function finalize() {
+
+					if (this.object && typeof this.object._finalize === 'function') {
+
+						this.object._finalize(true);
+					}
+				},
+
+				parseVertexIndex: function parseVertexIndex(value, len) {
+
+					var index = parseInt(value, 10);
+					return (index >= 0 ? index - 1 : index + len / 3) * 3;
+				},
+
+				parseNormalIndex: function parseNormalIndex(value, len) {
+
+					var index = parseInt(value, 10);
+					return (index >= 0 ? index - 1 : index + len / 3) * 3;
+				},
+
+				parseUVIndex: function parseUVIndex(value, len) {
+
+					var index = parseInt(value, 10);
+					return (index >= 0 ? index - 1 : index + len / 2) * 2;
+				},
+
+				addVertex: function addVertex(a, b, c) {
+
+					var src = this.vertices;
+					var dst = this.object.geometry.vertices;
+
+					dst.push(src[a + 0], src[a + 1], src[a + 2]);
+					dst.push(src[b + 0], src[b + 1], src[b + 2]);
+					dst.push(src[c + 0], src[c + 1], src[c + 2]);
+				},
+
+				addVertexLine: function addVertexLine(a) {
+
+					var src = this.vertices;
+					var dst = this.object.geometry.vertices;
+
+					dst.push(src[a + 0], src[a + 1], src[a + 2]);
+				},
+
+				addNormal: function addNormal(a, b, c) {
+
+					var src = this.normals;
+					var dst = this.object.geometry.normals;
+
+					dst.push(src[a + 0], src[a + 1], src[a + 2]);
+					dst.push(src[b + 0], src[b + 1], src[b + 2]);
+					dst.push(src[c + 0], src[c + 1], src[c + 2]);
+				},
+
+				addColor: function addColor(a, b, c) {
+
+					var src = this.colors;
+					var dst = this.object.geometry.colors;
+
+					dst.push(src[a + 0], src[a + 1], src[a + 2]);
+					dst.push(src[b + 0], src[b + 1], src[b + 2]);
+					dst.push(src[c + 0], src[c + 1], src[c + 2]);
+				},
+
+				addUV: function addUV(a, b, c) {
+
+					var src = this.uvs;
+					var dst = this.object.geometry.uvs;
+
+					dst.push(src[a + 0], src[a + 1]);
+					dst.push(src[b + 0], src[b + 1]);
+					dst.push(src[c + 0], src[c + 1]);
+				},
+
+				addUVLine: function addUVLine(a) {
+
+					var src = this.uvs;
+					var dst = this.object.geometry.uvs;
+
+					dst.push(src[a + 0], src[a + 1]);
+				},
+
+				addFace: function addFace(a, b, c, ua, ub, uc, na, nb, nc) {
+
+					var vLen = this.vertices.length;
+
+					var ia = this.parseVertexIndex(a, vLen);
+					var ib = this.parseVertexIndex(b, vLen);
+					var ic = this.parseVertexIndex(c, vLen);
+
+					this.addVertex(ia, ib, ic);
+
+					if (ua !== undefined) {
+
+						var uvLen = this.uvs.length;
+
+						ia = this.parseUVIndex(ua, uvLen);
+						ib = this.parseUVIndex(ub, uvLen);
+						ic = this.parseUVIndex(uc, uvLen);
+
+						this.addUV(ia, ib, ic);
+					}
+
+					if (na !== undefined) {
+
+						// Normals are many times the same. If so, skip function call and parseInt.
+						var nLen = this.normals.length;
+						ia = this.parseNormalIndex(na, nLen);
+
+						ib = na === nb ? ia : this.parseNormalIndex(nb, nLen);
+						ic = na === nc ? ia : this.parseNormalIndex(nc, nLen);
+
+						this.addNormal(ia, ib, ic);
+					}
+
+					if (this.colors.length > 0) {
+
+						this.addColor(ia, ib, ic);
+					}
+				},
+
+				addLineGeometry: function addLineGeometry(vertices, uvs) {
+
+					this.object.geometry.type = 'Line';
+
+					var vLen = this.vertices.length;
+					var uvLen = this.uvs.length;
+
+					for (var vi = 0, l = vertices.length; vi < l; vi++) {
+
+						this.addVertexLine(this.parseVertexIndex(vertices[vi], vLen));
+					}
+
+					for (var uvi = 0, l = uvs.length; uvi < l; uvi++) {
+
+						this.addUVLine(this.parseUVIndex(uvs[uvi], uvLen));
+					}
+				}
+
+			};
+
+			state.startObject('', false);
+
+			return state;
+		}
+
+		//
+
+		function OBJLoader(manager) {
+
+			this.manager = manager !== undefined ? manager : THREE.DefaultLoadingManager;
+
+			this.materials = null;
+		}
+
+		OBJLoader.prototype = {
+
+			constructor: OBJLoader,
+
+			load: function load(url, onLoad, onProgress, onError) {
+
+				var scope = this;
+
+				var loader = new THREE.FileLoader(scope.manager);
+				loader.setPath(this.path);
+				loader.load(url, function (text) {
+
+					onLoad(scope.parse(text));
+				}, onProgress, onError);
+			},
+
+			setPath: function setPath(value) {
+
+				this.path = value;
+			},
+
+			setMaterials: function setMaterials(materials) {
+
+				this.materials = materials;
+
+				return this;
+			},
+
+			parse: function parse(text) {
+
+				console.time('OBJLoader');
+
+				var state = new ParserState();
+
+				if (text.indexOf('\r\n') !== -1) {
+
+					// This is faster than String.split with regex that splits on both
+					text = text.replace(/\r\n/g, '\n');
+				}
+
+				if (text.indexOf('\\\n') !== -1) {
+
+					// join lines separated by a line continuation character (\)
+					text = text.replace(/\\\n/g, '');
+				}
+
+				var lines = text.split('\n');
+				var line = '',
+				    lineFirstChar = '';
+				var lineLength = 0;
+				var result = [];
+
+				// Faster to just trim left side of the line. Use if available.
+				var trimLeft = typeof ''.trimLeft === 'function';
+
+				for (var i = 0, l = lines.length; i < l; i++) {
+
+					line = lines[i];
+
+					line = trimLeft ? line.trimLeft() : line.trim();
+
+					lineLength = line.length;
+
+					if (lineLength === 0) continue;
+
+					lineFirstChar = line.charAt(0);
+
+					// @todo invoke passed in handler if any
+					if (lineFirstChar === '#') continue;
+
+					if (lineFirstChar === 'v') {
+
+						var data = line.split(/\s+/);
+
+						switch (data[0]) {
+
+							case 'v':
+								state.vertices.push(parseFloat(data[1]), parseFloat(data[2]), parseFloat(data[3]));
+								if (data.length === 8) {
+
+									state.colors.push(parseFloat(data[4]), parseFloat(data[5]), parseFloat(data[6]));
+								}
+								break;
+							case 'vn':
+								state.normals.push(parseFloat(data[1]), parseFloat(data[2]), parseFloat(data[3]));
+								break;
+							case 'vt':
+								state.uvs.push(parseFloat(data[1]), parseFloat(data[2]));
+								break;
+
+						}
+					} else if (lineFirstChar === 'f') {
+
+						var lineData = line.substr(1).trim();
+						var vertexData = lineData.split(/\s+/);
+						var faceVertices = [];
+
+						// Parse the face vertex data into an easy to work with format
+
+						for (var j = 0, jl = vertexData.length; j < jl; j++) {
+
+							var vertex = vertexData[j];
+
+							if (vertex.length > 0) {
+
+								var vertexParts = vertex.split('/');
+								faceVertices.push(vertexParts);
+							}
+						}
+
+						// Draw an edge between the first vertex and all subsequent vertices to form an n-gon
+
+						var v1 = faceVertices[0];
+
+						for (var j = 1, jl = faceVertices.length - 1; j < jl; j++) {
+
+							var v2 = faceVertices[j];
+							var v3 = faceVertices[j + 1];
+
+							state.addFace(v1[0], v2[0], v3[0], v1[1], v2[1], v3[1], v1[2], v2[2], v3[2]);
+						}
+					} else if (lineFirstChar === 'l') {
+
+						var lineParts = line.substring(1).trim().split(" ");
+						var lineVertices = [],
+						    lineUVs = [];
+
+						if (line.indexOf("/") === -1) {
+
+							lineVertices = lineParts;
+						} else {
+
+							for (var li = 0, llen = lineParts.length; li < llen; li++) {
+
+								var parts = lineParts[li].split("/");
+
+								if (parts[0] !== "") lineVertices.push(parts[0]);
+								if (parts[1] !== "") lineUVs.push(parts[1]);
+							}
+						}
+						state.addLineGeometry(lineVertices, lineUVs);
+					} else if ((result = object_pattern.exec(line)) !== null) {
+
+						// o object_name
+						// or
+						// g group_name
+
+						// WORKAROUND: https://bugs.chromium.org/p/v8/issues/detail?id=2869
+						// var name = result[ 0 ].substr( 1 ).trim();
+						var name = (" " + result[0].substr(1).trim()).substr(1);
+
+						state.startObject(name);
+					} else if (material_use_pattern.test(line)) {
+
+						// material
+
+						state.object.startMaterial(line.substring(7).trim(), state.materialLibraries);
+					} else if (material_library_pattern.test(line)) {
+
+						// mtl file
+
+						state.materialLibraries.push(line.substring(7).trim());
+					} else if (lineFirstChar === 's') {
+
+						result = line.split(' ');
+
+						// smooth shading
+
+						// @todo Handle files that have varying smooth values for a set of faces inside one geometry,
+						// but does not define a usemtl for each face set.
+						// This should be detected and a dummy material created (later MultiMaterial and geometry groups).
+						// This requires some care to not create extra material on each smooth value for "normal" obj files.
+						// where explicit usemtl defines geometry groups.
+						// Example asset: examples/models/obj/cerberus/Cerberus.obj
+
+						/*
+	      * http://paulbourke.net/dataformats/obj/
+	      * or
+	      * http://www.cs.utah.edu/~boulos/cs3505/obj_spec.pdf
+	      *
+	      * From chapter "Grouping" Syntax explanation "s group_number":
+	      * "group_number is the smoothing group number. To turn off smoothing groups, use a value of 0 or off.
+	      * Polygonal elements use group numbers to put elements in different smoothing groups. For free-form
+	      * surfaces, smoothing groups are either turned on or off; there is no difference between values greater
+	      * than 0."
+	      */
+						if (result.length > 1) {
+
+							var value = result[1].trim().toLowerCase();
+							state.object.smooth = value !== '0' && value !== 'off';
+						} else {
+
+							// ZBrush can produce "s" lines #11707
+							state.object.smooth = true;
+						}
+						var material = state.object.currentMaterial();
+						if (material) material.smooth = state.object.smooth;
+					} else {
+
+						// Handle null terminated files without exception
+						if (line === '\0') continue;
+
+						throw new Error('THREE.OBJLoader: Unexpected line: "' + line + '"');
+					}
+				}
+
+				state.finalize();
+
+				var container = new THREE.Group();
+				container.materialLibraries = [].concat(state.materialLibraries);
+
+				for (var i = 0, l = state.objects.length; i < l; i++) {
+
+					var object = state.objects[i];
+					var geometry = object.geometry;
+					var materials = object.materials;
+					var isLine = geometry.type === 'Line';
+
+					// Skip o/g line declarations that did not follow with any faces
+					if (geometry.vertices.length === 0) continue;
+
+					var buffergeometry = new THREE.BufferGeometry();
+
+					buffergeometry.addAttribute('position', new THREE.Float32BufferAttribute(geometry.vertices, 3));
+
+					if (geometry.normals.length > 0) {
+
+						buffergeometry.addAttribute('normal', new THREE.Float32BufferAttribute(geometry.normals, 3));
+					} else {
+
+						buffergeometry.computeVertexNormals();
+					}
+
+					if (geometry.colors.length > 0) {
+
+						buffergeometry.addAttribute('color', new THREE.Float32BufferAttribute(geometry.colors, 3));
+					}
+
+					if (geometry.uvs.length > 0) {
+
+						buffergeometry.addAttribute('uv', new THREE.Float32BufferAttribute(geometry.uvs, 2));
+					}
+
+					// Create materials
+
+					var createdMaterials = [];
+
+					for (var mi = 0, miLen = materials.length; mi < miLen; mi++) {
+
+						var sourceMaterial = materials[mi];
+						var material = undefined;
+
+						if (this.materials !== null) {
+
+							material = this.materials.create(sourceMaterial.name);
+
+							// mtl etc. loaders probably can't create line materials correctly, copy properties to a line material.
+							if (isLine && material && !(material instanceof THREE.LineBasicMaterial)) {
+
+								var materialLine = new THREE.LineBasicMaterial();
+								materialLine.copy(material);
+								material = materialLine;
+							}
+						}
+
+						if (!material) {
+
+							material = !isLine ? new THREE.MeshPhongMaterial() : new THREE.LineBasicMaterial();
+							material.name = sourceMaterial.name;
+						}
+
+						material.flatShading = sourceMaterial.smooth ? false : true;
+
+						createdMaterials.push(material);
+					}
+
+					// Create mesh
+
+					var mesh;
+
+					if (createdMaterials.length > 1) {
+
+						for (var mi = 0, miLen = materials.length; mi < miLen; mi++) {
+
+							var sourceMaterial = materials[mi];
+							buffergeometry.addGroup(sourceMaterial.groupStart, sourceMaterial.groupCount, mi);
+						}
+
+						mesh = !isLine ? new THREE.Mesh(buffergeometry, createdMaterials) : new THREE.LineSegments(buffergeometry, createdMaterials);
+					} else {
+
+						mesh = !isLine ? new THREE.Mesh(buffergeometry, createdMaterials[0]) : new THREE.LineSegments(buffergeometry, createdMaterials[0]);
+					}
+
+					mesh.name = object.name;
+
+					container.add(mesh);
+				}
+
+				console.timeEnd('OBJLoader');
+
+				return container;
+			}
+
+		};
+
+		return OBJLoader;
+	}();
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports) {
+
+	module.exports = "precision mediump float;\nprecision mediump int;\n#define GLSLIFY 1\n\n#ifndef PI\n#define PI 3.1415926\n#endif\n\nuniform mat4 projectionMatrix;\nuniform mat4 viewMatrix;\nuniform mat4 modelMatrix;\nuniform mat4 modelViewMatrix;\n\nuniform mat4 boneMatrices[MAX_BONES];\nuniform mat4 bindMatrix, bindMatrixInverse;\nuniform sampler2D texturePosition, textureRotation;\nuniform vec2 sections;\n\nattribute vec3 position;\nattribute vec3 normal;\nattribute vec2 uv, uv2;\nattribute vec3 skinIndex, skinWeight;\n\nvarying vec3 vNormal;\nvarying vec3 vColor;\n\nmat4 getMatrixFromQuat(const in vec4 quat) {\n    mat4 m = mat4(vec4(0), vec4(0), vec4(0), vec4(0));\n\n    float x = quat.x, y = quat.y, z = quat.z, w = quat.w;\n    float x2 = x + x, y2 = y + y, z2 = z + z;\n    float xx = x * x2, xy = x * y2, xz = x * z2;\n    float yy = y * y2, yz = y * z2, zz = z * z2;\n    float wx = w * x2, wy = w * y2, wz = w * z2;\n\n    /*\n    m[0] = 1.0 - (yy + zz);\n    m[4] = xy - wz;\n    m[8] = xz + wy;\n\n    m[1] = xy + wz;\n    m[5] = 1.0 - (xx + zz);\n    m[9] = yz - wx;\n\n    m[2] = xz - wy;\n    m[6] = yz + wx;\n    m[10] = 1.0 - (xx + yy);\n\n    m[15] = 1.0;\n    */\n\n    m[0][0] = 1.0 - (yy + zz);\n    m[1][0] = xy - wz;\n    m[2][0] = xz + wy;\n\n    m[0][1] = xy + wz;\n    m[1][1] = 1.0 - (xx + zz);\n    m[2][1] = yz - wx;\n\n    m[0][2] = xz - wy;\n    m[1][2] = yz + wx;\n    m[2][2] = 1.0 - (xx + yy);\n\n    m[3][3] = 1.0;\n\n    return m;\n}\n\nmat4 getBoneMatrix(const in float i) {\n    float u = i * sections.y;\n    vec4 pos = texture2D(texturePosition, vec2(u, uv2.y));\n    vec4 rot = texture2D(textureRotation, vec2(u, uv2.y));\n\n    // mat4 bone = boneMatrices[ int(i) ];\n    // mat4 bone = mat4(vec4(0, 0, 0, 1), vec4(0, 0, 0, 1), vec4(0, 0, 0, 1), vec4(0, 0, 0, 1));\n    // mat4 bone = mat4(vec4(1, 0, 0, 0), vec4(0, 1, 0, 0), vec4(0, 0, 1, 0), vec4(pos.xyz, 1));\n    // return bone;\n\n    mat4 T = mat4(vec4(1, 0, 0, 0), vec4(0, 1, 0, 0), vec4(0, 0, 1, 0), vec4(pos.xyz, 1));\n    mat4 R = getMatrixFromQuat(rot);\n    // return R * T;\n    return T * R;\n}\n\nvoid getSkinned(inout vec3 vertex, inout vec3 normal) {\n\tmat4 boneMatX = getBoneMatrix(skinIndex.x);\n\tmat4 boneMatY = getBoneMatrix(skinIndex.y);\n\t// mat4 boneMatZ = getBoneMatrix(skinIndex.z);\n\n\tvec4 skinVertex = bindMatrix * vec4(vertex, 1.0);\n    vec4 skinned = vec4(0.0);\n    skinned += boneMatX * skinVertex * skinWeight.x;\n    skinned += boneMatY * skinVertex * skinWeight.y;\n    // skinned += boneMatZ * skinVertex * skinWeight.z;\n\tvertex.xyz = (bindMatrixInverse * skinned).xyz;\n\n    mat4 skinMatrix = mat4(0.0);\n    skinMatrix += skinWeight.x * boneMatX;\n    skinMatrix += skinWeight.y * boneMatY;\n    // skinMatrix += skinWeight.z * boneMatZ;\n    skinMatrix = bindMatrixInverse * skinMatrix * bindMatrix;\n    normal.xyz = vec4(skinMatrix * vec4(normal, 0.0)).xyz;\n}\n\nvoid main() {\n    vec3 transformed = position.xyz, transformedNormal = normal;\n    getSkinned(transformed, transformedNormal);\n\n    gl_Position = projectionMatrix * (modelViewMatrix * vec4(transformed, 1.0));\n    vNormal = transformedNormal;\n    // vColor = skinWeight;\n    vColor = vec3(0, 1, 0);\n}\n\n"
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports) {
+
+	module.exports = "precision mediump float;\nprecision mediump int;\n#define GLSLIFY 1\n\nvarying vec3 vNormal;\nvarying vec3 vColor;\n\nvoid main() {\n    vec3 color = vColor * ((vNormal + 1.0) * 0.5);\n    gl_FragColor = vec4(color, 1.0);\n}\n\n"
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports) {
+
+	module.exports = "#define GLSLIFY 1\nhighp float random_2_0(vec2 co)\n{\n    highp float a = 12.9898;\n    highp float b = 78.233;\n    highp float c = 43758.5453;\n    highp float dt= dot(co.xy ,vec2(a,b));\n    highp float sn= mod(dt,3.14);\n    return fract(sin(sn) * c);\n}\n\n\n//\n// Description : Array and textureless GLSL 2D/3D/4D simplex\n//               noise functions.\n//      Author : Ian McEwan, Ashima Arts.\n//  Maintainer : ijm\n//     Lastmod : 20110822 (ijm)\n//     License : Copyright (C) 2011 Ashima Arts. All rights reserved.\n//               Distributed under the MIT License. See LICENSE file.\n//               https://github.com/ashima/webgl-noise\n//\n\nvec3 mod289_1_1(vec3 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec4 mod289_1_1(vec4 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec4 permute_1_2(vec4 x) {\n     return mod289_1_1(((x*34.0)+1.0)*x);\n}\n\nvec4 taylorInvSqrt_1_3(vec4 r)\n{\n  return 1.79284291400159 - 0.85373472095314 * r;\n}\n\nfloat snoise_1_4(vec3 v)\n  {\n  const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;\n  const vec4  D_1_5 = vec4(0.0, 0.5, 1.0, 2.0);\n\n// First corner\n  vec3 i  = floor(v + dot(v, C.yyy) );\n  vec3 x0 =   v - i + dot(i, C.xxx) ;\n\n// Other corners\n  vec3 g_1_6 = step(x0.yzx, x0.xyz);\n  vec3 l = 1.0 - g_1_6;\n  vec3 i1 = min( g_1_6.xyz, l.zxy );\n  vec3 i2 = max( g_1_6.xyz, l.zxy );\n\n  //   x0 = x0 - 0.0 + 0.0 * C.xxx;\n  //   x1 = x0 - i1  + 1.0 * C.xxx;\n  //   x2 = x0 - i2  + 2.0 * C.xxx;\n  //   x3 = x0 - 1.0 + 3.0 * C.xxx;\n  vec3 x1 = x0 - i1 + C.xxx;\n  vec3 x2 = x0 - i2 + C.yyy; // 2.0*C.x = 1/3 = C.y\n  vec3 x3 = x0 - D_1_5.yyy;      // -1.0+3.0*C.x = -0.5 = -D.y\n\n// Permutations\n  i = mod289_1_1(i);\n  vec4 p = permute_1_2( permute_1_2( permute_1_2(\n             i.z + vec4(0.0, i1.z, i2.z, 1.0 ))\n           + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))\n           + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));\n\n// Gradients: 7x7 points over a square, mapped onto an octahedron.\n// The ring size 17*17 = 289 is close to a multiple of 49 (49*6 = 294)\n  float n_ = 0.142857142857; // 1.0/7.0\n  vec3  ns = n_ * D_1_5.wyz - D_1_5.xzx;\n\n  vec4 j = p - 49.0 * floor(p * ns.z * ns.z);  //  mod(p,7*7)\n\n  vec4 x_ = floor(j * ns.z);\n  vec4 y_ = floor(j - 7.0 * x_ );    // mod(j,N)\n\n  vec4 x = x_ *ns.x + ns.yyyy;\n  vec4 y = y_ *ns.x + ns.yyyy;\n  vec4 h = 1.0 - abs(x) - abs(y);\n\n  vec4 b0 = vec4( x.xy, y.xy );\n  vec4 b1 = vec4( x.zw, y.zw );\n\n  //vec4 s0 = vec4(lessThan(b0,0.0))*2.0 - 1.0;\n  //vec4 s1 = vec4(lessThan(b1,0.0))*2.0 - 1.0;\n  vec4 s0 = floor(b0)*2.0 + 1.0;\n  vec4 s1 = floor(b1)*2.0 + 1.0;\n  vec4 sh = -step(h, vec4(0.0));\n\n  vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;\n  vec4 a1_1_7 = b1.xzyw + s1.xzyw*sh.zzww ;\n\n  vec3 p0_1_8 = vec3(a0.xy,h.x);\n  vec3 p1 = vec3(a0.zw,h.y);\n  vec3 p2 = vec3(a1_1_7.xy,h.z);\n  vec3 p3 = vec3(a1_1_7.zw,h.w);\n\n//Normalise gradients\n  vec4 norm = taylorInvSqrt_1_3(vec4(dot(p0_1_8,p0_1_8), dot(p1,p1), dot(p2, p2), dot(p3,p3)));\n  p0_1_8 *= norm.x;\n  p1 *= norm.y;\n  p2 *= norm.z;\n  p3 *= norm.w;\n\n// Mix final noise value\n  vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);\n  m = m * m;\n  return 42.0 * dot( m*m, vec4( dot(p0_1_8,x0), dot(p1,x1),\n                                dot(p2,x2), dot(p3,x3) ) );\n  }\n\n\n\n\n#define PI 3.1415926\n\nuniform int mode;\nuniform float dt, time, speed;\nuniform vec2 sections;\nuniform sampler2D textureVelocity;\n\nvoid init() {\n}\n\nvoid update() {\n}\n\nvoid main() {\n    vec2 uv = gl_FragCoord.xy / resolution.xy;\n\n    vec4 pos = texture2D(texturePosition, uv);\n    bool head = (uv.x < sections.y);\n    if(head) {\n        vec4 vel = texture2D(textureVelocity, vec2(0.5, uv.y));\n        // gl_FragColor = vec4(mix(pos.xyz, pos.xyz + vel.xyz * dt, dt), 1);\n        // gl_FragColor = vec4(pos.xyz + vel.xyz * dt * speed, 1);\n\n        vec3 next = vel.xyz * dt * speed;\n        gl_FragColor = vec4(pos.xyz + next, 1);\n\n    } else {\n        float prev = uv.x - sections.y;\n        vec4 pp = texture2D(texturePosition, vec2(prev, uv.y));\n        // float near = 1.0 - uv.x;\n        // gl_FragColor = vec4(mix(pos.xyz, pp.xyz, min(dt + 10.0 * near * dt, 1.0)), 1.0);\n        gl_FragColor = vec4(mix(pos.xyz, pp.xyz, min(dt, 1.0)), 1.0);\n    }\n}\n"
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports) {
+
+	module.exports = "#define GLSLIFY 1\nhighp float random_1_0(vec2 co)\n{\n    highp float a = 12.9898;\n    highp float b = 78.233;\n    highp float c = 43758.5453;\n    highp float dt= dot(co.xy ,vec2(a,b));\n    highp float sn= mod(dt,3.14);\n    return fract(sin(sn) * c);\n}\n\n\n\n#define PI 3.1415926\n#define QUATERNION_IDENTITY vec4(0, 0, 0, 1)\n\nvec3 random_point_on_sphere(vec2 uv) {\n    float u = random_1_0(uv) * 2.0 - 1.0;\n    float theta = random_1_0(uv + 0.333) * PI * 2.0;\n    float u2 = sqrt(1.0 - u * u);\n    return vec3(u2 * cos(theta), u2 * sin(theta), u);\n}\n\n// Quaternion multiplication\n// http://mathworld.wolfram.com/Quaternion.html\nvec4 qmul(vec4 q1, vec4 q2) {\n\treturn vec4(\n\t\tq2.xyz * q1.w + q1.xyz * q2.w + cross(q1.xyz, q2.xyz),\n\t\tq1.w * q2.w - dot(q1.xyz, q2.xyz)\n\t);\n}\n\n// Vector rotation with a quaternion\n// http://mathworld.wolfram.com/Quaternion.html\nvec3 rotate_vector(vec3 v, vec4 r) {\n\tvec4 r_c = r * vec4(-1, -1, -1, 1);\n\treturn qmul(r, qmul(vec4(v, 0), r_c)).xyz;\n}\n\nvec3 rotate_vector_at(vec3 v, vec3 center, vec4 r) {\n\tvec3 dir = v - center;\n\treturn center + rotate_vector(dir, r);\n}\n\n// A given angle of rotation about a given axis\nvec4 rotate_angle_axis(float angle, vec3 axis) {\n\tfloat sn = sin(angle * 0.5);\n\tfloat cs = cos(angle * 0.5);\n\treturn vec4(axis * sn, cs);\n}\n\nvec4 q_conj(vec4 q) {\n\treturn vec4(-q.x, -q.y, -q.z, q.w);\n}\n\nvec4 q_look_at(vec3 forward, vec3 up) {\n    vec3 right = normalize(cross(forward, up));\n    up = normalize(cross(forward, right));\n\n    float m00 = right.x;\n    float m01 = right.y;\n    float m02 = right.z;\n    float m10 = up.x;\n    float m11 = up.y;\n    float m12 = up.z;\n    float m20 = forward.x;\n    float m21 = forward.y;\n    float m22 = forward.z;\n\n    float num8 = (m00 + m11) + m22;\n    vec4 q = QUATERNION_IDENTITY;\n    if (num8 > 0.0)\n    {\n        float num = sqrt(num8 + 1.0);\n        q.w = num * 0.5;\n        num = 0.5 / num;\n        q.x = (m12 - m21) * num;\n        q.y = (m20 - m02) * num;\n        q.z = (m01 - m10) * num;\n        return q;\n    }\n\n    if ((m00 >= m11) && (m00 >= m22))\n    {\n        float num7 = sqrt(((1.0 + m00) - m11) - m22);\n        float num4 = 0.5 / num7;\n        q.x = 0.5 * num7;\n        q.y = (m01 + m10) * num4;\n        q.z = (m02 + m20) * num4;\n        q.w = (m12 - m21) * num4;\n        return q;\n    }\n\n    if (m11 > m22)\n    {\n        float num6 = sqrt(((1.0 + m11) - m00) - m22);\n        float num3 = 0.5 / num6;\n        q.x = (m10 + m01) * num3;\n        q.y = 0.5 * num6;\n        q.z = (m21 + m12) * num3;\n        q.w = (m20 - m02) * num3;\n        return q;\n    }\n\n    float num5 = sqrt(((1.0 + m22) - m00) - m11);\n    float num2 = 0.5 / num5;\n    q.x = (m20 + m02) * num2;\n    q.y = (m21 + m12) * num2;\n    q.z = 0.5 * num5;\n    q.w = (m01 - m10) * num2;\n    return q;\n}\n\nvec4 q_slerp(vec4 a, vec4 b, float t) {\n    // if either input is zero, return the other.\n    if (length(a) == 0.0) {\n        if (length(b) == 0.0) {\n            return QUATERNION_IDENTITY;\n        }\n        return b;\n    } else if (length(b) == 0.0) {\n        return a;\n    }\n\n    float cosHalfAngle = a.w * b.w + dot(a.xyz, b.xyz);\n\n    if (cosHalfAngle >= 1.0 || cosHalfAngle <= -1.0) {\n        return a;\n    } else if (cosHalfAngle < 0.0) {\n        b.xyz = -b.xyz;\n        b.w = -b.w;\n        cosHalfAngle = -cosHalfAngle;\n    }\n\n    float blendA;\n    float blendB;\n    if (cosHalfAngle < 0.99) {\n        // do proper slerp for big angles\n        float halfAngle = acos(cosHalfAngle);\n        float sinHalfAngle = sin(halfAngle);\n        float oneOverSinHalfAngle = 1.0 / sinHalfAngle;\n        blendA = sin(halfAngle * (1.0 - t)) * oneOverSinHalfAngle;\n        blendB = sin(halfAngle * t) * oneOverSinHalfAngle;\n    } else {\n        // do lerp if angle is really small.\n        blendA = 1.0 - t;\n        blendB = t;\n    }\n\n    vec4 result = vec4(blendA * a.xyz + blendB * b.xyz, blendA * a.w + blendB * b.w);\n    if (length(result) > 0.0) {\n        return normalize(result);\n    }\n    return QUATERNION_IDENTITY;\n}\n\nuniform int mode;\nuniform float dt, time;\nuniform vec2 sections;\nuniform sampler2D textureVelocity;\n\nvoid init(vec2 uv) {\n    gl_FragColor = QUATERNION_IDENTITY;\n}\n\nvoid update(vec2 uv) {\n    vec4 rot = texture2D(textureRotation, uv);\n    bool head = (uv.x < sections.y);\n    if(head) {\n        vec4 vel = texture2D(textureVelocity, vec2(0.5, uv.y));\n        vec4 q = q_look_at(normalize(vel.xyz), vec3(0, 0, 1));\n        // vec4 q = rotate_angle_axis(time, vec3(0, 1, 0));\n        // gl_FragColor = q;\n        gl_FragColor = q_slerp(rot, q, dt);\n    } else {\n        float prev = uv.x - sections.y;\n        vec4 prot = texture2D(textureRotation, vec2(prev, uv.y));\n        gl_FragColor = q_slerp(rot, prot, dt);\n    }\n\n/*\n    if(section < sections.y) {\n    } else {\n        float angle = sin(time + section * PI * 2.0);\n        gl_FragColor = rotate_angle_axis(0.0, vec3(0, 1, 0));\n    }\n*/\n\n\n}\n\nvoid main() {\n    vec2 uv = gl_FragCoord.xy / resolution.xy;\n    if(mode == 0) {\n        init(uv);\n    } else {\n        update(uv);\n    }\n\n}\n"
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports) {
+
+	module.exports = "#define GLSLIFY 1\nhighp float random_2_0(vec2 co)\n{\n    highp float a = 12.9898;\n    highp float b = 78.233;\n    highp float c = 43758.5453;\n    highp float dt= dot(co.xy ,vec2(a,b));\n    highp float sn= mod(dt,3.14);\n    return fract(sin(sn) * c);\n}\n\n\n//\n// Description : Array and textureless GLSL 2D/3D/4D simplex\n//               noise functions.\n//      Author : Ian McEwan, Ashima Arts.\n//  Maintainer : ijm\n//     Lastmod : 20110822 (ijm)\n//     License : Copyright (C) 2011 Ashima Arts. All rights reserved.\n//               Distributed under the MIT License. See LICENSE file.\n//               https://github.com/ashima/webgl-noise\n//\n\nvec3 mod289_1_1(vec3 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec4 mod289_1_1(vec4 x) {\n  return x - floor(x * (1.0 / 289.0)) * 289.0;\n}\n\nvec4 permute_1_2(vec4 x) {\n     return mod289_1_1(((x*34.0)+1.0)*x);\n}\n\nvec4 taylorInvSqrt_1_3(vec4 r)\n{\n  return 1.79284291400159 - 0.85373472095314 * r;\n}\n\nfloat snoise_1_4(vec3 v)\n  {\n  const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;\n  const vec4  D_1_5 = vec4(0.0, 0.5, 1.0, 2.0);\n\n// First corner\n  vec3 i  = floor(v + dot(v, C.yyy) );\n  vec3 x0 =   v - i + dot(i, C.xxx) ;\n\n// Other corners\n  vec3 g_1_6 = step(x0.yzx, x0.xyz);\n  vec3 l = 1.0 - g_1_6;\n  vec3 i1 = min( g_1_6.xyz, l.zxy );\n  vec3 i2 = max( g_1_6.xyz, l.zxy );\n\n  //   x0 = x0 - 0.0 + 0.0 * C.xxx;\n  //   x1 = x0 - i1  + 1.0 * C.xxx;\n  //   x2 = x0 - i2  + 2.0 * C.xxx;\n  //   x3 = x0 - 1.0 + 3.0 * C.xxx;\n  vec3 x1 = x0 - i1 + C.xxx;\n  vec3 x2 = x0 - i2 + C.yyy; // 2.0*C.x = 1/3 = C.y\n  vec3 x3 = x0 - D_1_5.yyy;      // -1.0+3.0*C.x = -0.5 = -D.y\n\n// Permutations\n  i = mod289_1_1(i);\n  vec4 p = permute_1_2( permute_1_2( permute_1_2(\n             i.z + vec4(0.0, i1.z, i2.z, 1.0 ))\n           + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))\n           + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));\n\n// Gradients: 7x7 points over a square, mapped onto an octahedron.\n// The ring size 17*17 = 289 is close to a multiple of 49 (49*6 = 294)\n  float n_ = 0.142857142857; // 1.0/7.0\n  vec3  ns = n_ * D_1_5.wyz - D_1_5.xzx;\n\n  vec4 j = p - 49.0 * floor(p * ns.z * ns.z);  //  mod(p,7*7)\n\n  vec4 x_ = floor(j * ns.z);\n  vec4 y_ = floor(j - 7.0 * x_ );    // mod(j,N)\n\n  vec4 x = x_ *ns.x + ns.yyyy;\n  vec4 y = y_ *ns.x + ns.yyyy;\n  vec4 h = 1.0 - abs(x) - abs(y);\n\n  vec4 b0 = vec4( x.xy, y.xy );\n  vec4 b1 = vec4( x.zw, y.zw );\n\n  //vec4 s0 = vec4(lessThan(b0,0.0))*2.0 - 1.0;\n  //vec4 s1 = vec4(lessThan(b1,0.0))*2.0 - 1.0;\n  vec4 s0 = floor(b0)*2.0 + 1.0;\n  vec4 s1 = floor(b1)*2.0 + 1.0;\n  vec4 sh = -step(h, vec4(0.0));\n\n  vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;\n  vec4 a1_1_7 = b1.xzyw + s1.xzyw*sh.zzww ;\n\n  vec3 p0_1_8 = vec3(a0.xy,h.x);\n  vec3 p1 = vec3(a0.zw,h.y);\n  vec3 p2 = vec3(a1_1_7.xy,h.z);\n  vec3 p3 = vec3(a1_1_7.zw,h.w);\n\n//Normalise gradients\n  vec4 norm = taylorInvSqrt_1_3(vec4(dot(p0_1_8,p0_1_8), dot(p1,p1), dot(p2, p2), dot(p3,p3)));\n  p0_1_8 *= norm.x;\n  p1 *= norm.y;\n  p2 *= norm.z;\n  p3 *= norm.w;\n\n// Mix final noise value\n  vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);\n  m = m * m;\n  return 42.0 * dot( m*m, vec4( dot(p0_1_8,x0), dot(p1,x1),\n                                dot(p2,x2), dot(p3,x3) ) );\n  }\n\n\n\n\n#define PI 3.1415926\n\nuniform float dt, time;\nuniform float strength;\nuniform vec2 sections;\n\nvec3 snoiseVec3 (vec3 x){\n    float s = snoise_1_4(vec3(x));\n    float s1 = snoise_1_4(vec3(x.y - 19.1, x.z + 33.4, x.x + 47.2));\n    float s2 = snoise_1_4(vec3(x.z + 74.2, x.x - 124.5, x.y + 99.4));\n    vec3 c = vec3(s, s1, s2);\n    return c;\n}\n\nvec3 curlNoise(vec3 p) {\n    const float e = 0.0009765625;\n\n    vec3 dx = vec3(e, 0, 0);\n    vec3 dy = vec3(0, e, 0);\n    vec3 dz = vec3(0, 0, e);\n\n    vec3 p_x0 = snoiseVec3(p - dx);\n    vec3 p_x1 = snoiseVec3(p + dx);\n    vec3 p_y0 = snoiseVec3(p - dy);\n    vec3 p_y1 = snoiseVec3(p + dy);\n    vec3 p_z0 = snoiseVec3(p - dz);\n    vec3 p_z1 = snoiseVec3(p + dz);\n\n    float x = p_y1.z - p_y0.z - p_z1.y + p_z0.y;\n    float y = p_z1.x - p_z0.x - p_x1.z + p_x0.z;\n    float z = p_x1.y - p_x0.y - p_y1.x + p_y0.x;\n\n    const float divisor = 1.0 / (2.0 * e);\n    return normalize(vec3(x, y, z) * divisor);\n}\n\nvoid main() {\n    vec2 uv = gl_FragCoord.xy / resolution.xy;\n\n    // gl_FragColor = vec4(sin(time), 0, cos(time), 1);\n    vec3 curl = curlNoise(vec3(uv * 33.1, time * 0.25)) * strength;\n    gl_FragColor = vec4(curl, 1);\n}\n\n"
 
 /***/ })
 /******/ ]);

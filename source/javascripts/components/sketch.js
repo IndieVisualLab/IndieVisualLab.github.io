@@ -9,6 +9,8 @@ import "../lib/threejs/controls/TrackballControls";
 import CompositePass from "./composite";
 import ParticleSystem from "./particle";
 
+import Human from "./human";
+
 export default class Sketch extends THREE.EventDispatcher {
 
     constructor(dom) {
@@ -24,16 +26,20 @@ export default class Sketch extends THREE.EventDispatcher {
         });
 
         this.setupScene();
-        this.setupComposer();
+        this.setupControls();
+        this.setupModel();
+        // this.setupComposer();
 
         window.addEventListener("resize", (e) => {
             this.resize();
         });
 
+        /*
         window.addEventListener("mousemove", (e) => {
             let mx = e.clientX, my = e.clientY;
             this.interact(mx, my);
         });
+        */
 
         let loop = (time) => {
             this.loop(time);
@@ -54,7 +60,7 @@ export default class Sketch extends THREE.EventDispatcher {
         let dir = vector.sub(this.camera.position).normalize();
         let distance = - this.camera.position.z / dir.z;
         let p = this.camera.position.clone().add(dir.multiplyScalar(distance));
-        this.system.interact(p);
+        // this.system.interact(p);
     }
 
     setupScene() {
@@ -77,11 +83,28 @@ export default class Sketch extends THREE.EventDispatcher {
         this.scene.add(cube);
         */
 
+        /*
         this.system = new ParticleSystem(this.renderer);
         this.scene.add(this.system);
         this.updaters.push(this.system);
+        */
 
         // this.debugTexture(this.system.texturePosition);
+        let gridHelper = new THREE.GridHelper(10, 10);
+        this.scene.add(gridHelper);
+    }
+
+    setupControls() {
+        let controls = new THREE.TrackballControls(this.camera, this.renderer.domElement);
+        this.updaters.push(controls);
+    }
+
+    setupModel() {
+        let human = new Human(this.renderer, "../models/lowpoly/");
+        this.scene.add(human);
+        this.updaters.push(human);
+
+        // this.debugTexture(human.texturePosition);
     }
 
     debugTexture(texture, width = 10, height = 10) {
@@ -131,8 +154,8 @@ export default class Sketch extends THREE.EventDispatcher {
     }
 
     render() {
-        // this.renderer.render(this.scene, this.camera);
-        this.composer.render();
+        this.renderer.render(this.scene, this.camera);
+        // this.composer.render();
     }
 
     resize () {
@@ -142,7 +165,7 @@ export default class Sketch extends THREE.EventDispatcher {
 
         this.camera.aspect = w / h;
         this.camera.updateProjectionMatrix();
-        this.composer.setSize(w, h);
+        // this.composer.setSize(w, h);
     }
 
 }
