@@ -1,14 +1,12 @@
 
 import Vue from "./lib/vue.min";
 import Member from "./components/member";
-import Sketch from "./components/sketch";
 
 class App {
 
     constructor() {
         const self = this;
 
-        /*
         const vue = new Vue({
             el: "#main",
             data: {
@@ -22,10 +20,7 @@ class App {
                 });
             }
         });
-        */
 
-        const canvas = document.getElementById("background");
-        new Sketch(canvas);
     }
 
     request(path) {
