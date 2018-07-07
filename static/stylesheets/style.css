@@ -116,8 +116,7 @@ footer {
     width: 100%;
     color: #333; }
     .container .logo {
-      width: 230px;
-      margin-bottom: 60px; }
+      width: 230px; }
       .container .logo .logo-inner {
         text-align: left; }
         .container .logo .logo-inner h1 {
@@ -126,8 +125,7 @@ footer {
           letter-spacing: 2px;
           display: block; }
     .container .works {
-      width: 100%;
-      margin-bottom: 50px; }
+      width: 100%; }
       .container .works iframe {
         width: 100%;
         height: calc(55.1vw); }
