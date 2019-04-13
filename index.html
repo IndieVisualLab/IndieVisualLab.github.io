@@ -11,7 +11,7 @@
 	<link rel="stylesheet" href="https://IndieVisualLab.github.io/stylesheets/style.css">
 	<link rel="stylesheet" href="https://IndieVisualLab.github.io/stylesheets/font-awesome.min.css">
 	<link href="https://IndieVisualLab.github.io/index.xml" rel="feed" type="application/rss+xml" title="IndieVisualLab">
-	<meta name="generator" content="Hugo 0.20.7" />
+	<meta name="generator" content="Hugo 0.53" />
 
     <meta property="og:title" content="IndieVisualLab" />
     <meta property="og:type" content="website" />
@@ -19,48 +19,77 @@
 </head>
 <body>
 
-    <canvas id="background"></canvas>
-	<main id="main" class="container">
-        <div class="logo">
-            <div class="logo-inner">
-                <h1>Indie</h1>
-                <h1>Visual</h1>
-                <h1>Lab</h1>
-            </div>
+<main id="main" class="container">
+    <div class="logo">
+        <div class="logo-inner">
+            <h1>Indie</h1>
+            <h1>Visual</h1>
+            <h1>Lab</h1>
         </div>
-        <div class="description">
-            <p>Indie Visual LabはリアルタイムCGプログラミングについての技術資料を作成・公開したり、その技術に基づくコンテンツ開発を行っているサークルです。</p>
-            <div class="inner">
-                <p class="header">技術同人誌<a class="link" href="https://indievisuallab.stores.jp/items/59edf11ac8f22c0152002588" target="_blank">Unity Graphics Programming</a>販売中</p>
-                <a class="preview" href="https://indievisuallab.stores.jp/items/59edf11ac8f22c0152002588" target="_blank">
-                    <img class="cover" src="images/cover.png" alt="Unity Graphics Programming"></img>
-                </a>
-                <p class="note">Unityによるグラフィックスプログラミングテクニックについて解説した技術同人誌です。
-GPUを活用した表現を行うための基礎知識やその応用など、様々なトピックを取り上げています。</p>
-                <p class="note">※ 全章についてサンプルコード付属</p>
-            </div>
-            <p><a class="link" href="mailto:lab.indievisual@gmail.com">lab.indievisual@gmail.com</a></p>
-        </div>
-        <div class="member">
-            <h2>Member</h2>
-            <ul>
-                <li v-for="member in members">
-                    <span v-text="member.name"></span>
-                    <div>
-                        <a v-bind:href="member.github" target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a>
-                        <a v-if="member.twitter.length > 0" v-bind:href="member.twitter" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-                        <a v-if="member.personal.length > 0" v-bind:href="member.personal" target="_blank"><i class="fa fa-user" aria-hidden="true"></i></a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </main>
-    <script src="https://IndieVisualLab.github.io/javascripts/lib/three.min.js"></script>
-    <script src="https://IndieVisualLab.github.io/javascripts/main.js"></script>
+    </div>
+    <div class="works">
+        <iframe src="https://player.vimeo.com/video/266119107" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+        <ul>
+            <li>
+                <a class="link" href="https://indievisuallab.stores.jp/items/59edf11ac8f22c0152002588" target="_blank">Unity Graphics Programming vol.1</a>
+            </li>
+            <li>
+                <a class="link" href="https://indievisuallab.stores.jp/items/5aaa4e1def843f28cd000aa0" target="_blank">Unity Graphics Programming vol.1 (Korean)</a>
+            </li>
+        </ul>
+    </div>
+    <div class="works">
+        <iframe src="https://player.vimeo.com/video/264543381" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+        <ul>
+            <li>
+                <a class="link" href="https://indievisuallab.stores.jp/items/5ae077b850bbc30f3a000a6d" target="_blank">Unity Graphics Programming vol.2</a>
+            </li>
+        </ul>
+    </div>
+    <div class="works">
+        <iframe src="https://player.vimeo.com/video/293139321" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+        <ul>
+            <li>
+                <a class="link" href="https://indievisuallab.stores.jp/items/5bc08f64a6e6ee273e000e4b" target="_blank">Unity Graphics Programming vol.3</a>
+            </li>
+        </ul>
+    </div>
+    <div class="description">
+        <p>Indie Visual LabはリアルタイムCGプログラミングについての技術資料を作成・公開したり、その技術に基づくコンテンツ開発を行っているサークルです。</p>
+        <ul>
+            <li>
+                <a class="link" href="https://github.com/IndieVisualLab" target="_blank"><i class="fa fa-github" aria-hidden="true"></i>@IndieVisualLab</a>
+            </li>
+            <li>
+                <a class="link" href="mailto:lab.indievisual@gmail.com"><i class="fa fa-envelope" aria-hidden="true"></i>lab.indievisual@gmail.com</a>
+            </li>
+        </ul>
+    </div>
+    <div class="member">
+        <h2>Member</h2>
+        <ul>
+            <li v-for="member in members">
+                <span v-text="member.name"></span>
+                <div>
+                    <a v-bind:href="member.github" target="_blank">
+                        <i class="fa fa-github" aria-hidden="true"></i>
+                    </a>
+                    <a v-if="member.twitter.length > 0" v-bind:href="member.twitter" target="_blank">
+                        <i class="fa fa-twitter" aria-hidden="true"></i>
+                    </a>
+                    <a v-if="member.personal.length > 0" v-bind:href="member.personal" target="_blank">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</main>
+<script src="https://IndieVisualLab.github.io/javascripts/main.js"></script> 
 
         <footer>
             <div class="copyright">
-                Copyright © 2017 IndieVisualLab
+                Copyright © 2018 Indie Visual Lab
             </div>
         </footer>
     </body>
